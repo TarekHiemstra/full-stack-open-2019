@@ -1,0 +1,4 @@
+title: 0.6: New note\nCreate a new note on page\nhttps://fullstack-exampleapp.herokuapp.com/spa
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+server-->browser: HTTP 201 Created: {"message":"note created"}
