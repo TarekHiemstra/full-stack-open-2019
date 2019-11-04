@@ -1,13 +1,20 @@
 import React, { useState } from 'react'
+import Filter from './components/Filter'
+import Person from './components/Person'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
-  const [ persons, setPersons] = useState([
+
+  // Application's state
+  const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-1234567' }
   ])
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ newFilter, setNewFilter ] = useState('')
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [newFilter, setNewFilter] = useState('')
 
+  // Event handlers
   const addName = (event) => {
     event.preventDefault()
     // Check for duplicates
@@ -18,8 +25,7 @@ const App = () => {
       setNewNumber('')
       return
     }
-    const personObject = {name: newName, number: newNumber}
-    setPersons(persons.concat(personObject))
+    setPersons(persons.concat({ name: newName, number: newNumber }))
     setNewName('')
     setNewNumber('')
   }
@@ -28,25 +34,21 @@ const App = () => {
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterChange = (event) => setNewFilter(event.target.value)
 
-  console.log(persons[0].name)
-  const listAllPersons =
-    persons.filter(person =>
-    person.name.includes(newFilter)).map(person =>
-    <div key={person.name}>{person.name} {person.number}<br /></div>)
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filters shown with<input value={newFilter} onChange={handleFilterChange} /></div>
+      <Filter value={newFilter} onChange={handleFilterChange} />
+
       <h3>add a new</h3>
-      <form onSubmit={addName}>
-        <div>name: <input value={newName} onChange={handleNameChange} /></div>
-        <div>number: <input value={newNumber} onChange={handleNumberChange} /></div>
-        <div><button type="submit">add</button></div>
-      </form>
+      <PersonForm onSubmit={addName}
+                  valueName={newName}
+                  onChangeName={handleNameChange}
+                  valueNumber={newNumber}
+                  onChangeNumber={handleNumberChange} 
+      />
 
       <h3>Numbers</h3>
-      {listAllPersons}
+      <Persons filter={newFilter} persons={persons} />
     </div>
   )
 }
