@@ -17,10 +17,19 @@ const App = () => {
 
   const handleFilterChange = (event) => setNewFilter(event.target.value)
 
+  const showCountry = (event) => {
+    event.preventDefault()
+    setNewFilter(event.target.value)
+  }
+
   return (
     <div>
       <Filter value={newFilter} onChange={handleFilterChange} />
-      <Countries filter={newFilter} countries={countries} />
+      <Countries 
+        filter={newFilter} 
+        countries={countries}
+        showCountry={showCountry} 
+      />
     </div>
   );
 }

@@ -2,8 +2,7 @@ import React from 'react'
 import Country from './Country'
 
 
-const Countries = ({ filter, countries }) => {
-  console.log(countries)
+const Countries = ({ filter, countries, showCountry }) => {
 
   const countriesFiltered = countries.filter(country =>
     country.name.toLowerCase().includes(filter.toLowerCase()))
@@ -39,7 +38,13 @@ const Countries = ({ filter, countries }) => {
   } else if (countriesFiltered.length <= 10) {
     return (
       countriesFiltered.map(country =>
-        <Country key={country.name} name={country.name} />
+        <div key={country.name}>
+          <Country name={country.name} />
+          <button type='button' value={country.name} onClick={showCountry}>
+            show
+          </button>
+          <br />
+        </div>
       )
     )
   } else {
