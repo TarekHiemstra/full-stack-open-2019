@@ -4,12 +4,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 
+const baseUrl = 'http://localhost:3001/persons'
+const getAll = () => axios.get(baseUrl)
+const create = newObject => axios.post(baseUrl, newObject)
+
 const App = () => {
   // Application's effect
   useEffect(() => {
-  axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
+    getAll().then(response => {
       setPersons(response.data)
     })
   }, [])
@@ -31,9 +33,12 @@ const App = () => {
       setNewNumber('')
       return
     }
-    setPersons(persons.concat({ name: newName, number: newNumber }))
-    setNewName('')
-    setNewNumber('')
+    create({ name: newName, number: newNumber })
+    .then(response => {
+      setPersons(persons.concat(response.data))
+      setNewName('')
+      setNewNumber('')
+    })
   }
 
   const handleNameChange = (event) => setNewName(event.target.value)
