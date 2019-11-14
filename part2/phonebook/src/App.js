@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 
-const baseUrl = 'http://localhost:3001/persons'
-const getAll = () => axios.get(baseUrl)
-const create = newObject => axios.post(baseUrl, newObject)
-
 const App = () => {
   // Application's effect
   useEffect(() => {
-    getAll().then(response => {
-      setPersons(response.data)
+    personService
+      .getAll().then(response => {
+        setPersons(response)
     })
   }, [])
 
@@ -33,11 +31,13 @@ const App = () => {
       setNewNumber('')
       return
     }
-    create({ name: newName, number: newNumber })
-    .then(response => {
-      setPersons(persons.concat(response.data))
-      setNewName('')
-      setNewNumber('')
+
+    personService
+      .create({ name: newName, number: newNumber })
+      .then(response => {
+        setPersons(persons.concat(response))
+        setNewName('')
+        setNewNumber('')
     })
   }
 
