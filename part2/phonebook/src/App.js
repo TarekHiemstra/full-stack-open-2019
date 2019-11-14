@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
@@ -41,6 +40,14 @@ const App = () => {
     })
   }
 
+  const deleteName = (event) => {
+    event.preventDefault()
+    const id = parseInt(event.target.value)
+    personService.remove(persons[id -1])
+    // Without the next line, a user would have to refresh the page manually.
+    setPersons(persons.filter(person => person.id !== id ))
+  }
+
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterChange = (event) => setNewFilter(event.target.value)
@@ -59,7 +66,7 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons filter={newFilter} persons={persons} />
+      <Persons filter={newFilter} persons={persons} deleteName={deleteName} />
     </div>
   )
 }
