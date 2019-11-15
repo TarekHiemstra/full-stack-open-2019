@@ -8,9 +8,10 @@ const App = () => {
   // Application's effect
   useEffect(() => {
     personService
-      .getAll().then(response => {
-        setPersons(response)
-    })
+      .getAll()
+        .then(initialPersons => {
+        setPersons(initialPersons)
+        })
   }, [])
 
   // Application's state
@@ -22,15 +23,30 @@ const App = () => {
   // Event handlers
   const addName = (event) => {
     event.preventDefault()
+
     // Check for duplicates
-    const checkForDuplicate = persons.find(person => person.name === newName)
-    if (typeof checkForDuplicate !== 'undefined') {
-      alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      setNewNumber('')
-      return
+    const duplicateCheck = persons.find(person => person.name === newName)
+    if (typeof duplicateCheck !== 'undefined' && duplicateCheck.number !== newNumber) {
+      personService
+        .update(duplicateCheck.id, { name: duplicateCheck.name, number: newNumber})
+        .then(returnedPerson => {
+          if (window.confirm(`${returnedPerson.name} is already added to phonebook, 
+            replace the old number with a new one?`)) {
+            setPersons(persons.map(person => 
+                      person.id !== duplicateCheck.id ? person : returnedPerson))
+          }
+          setNewName('')
+          setNewNumber('')
+        })
+        return
+    } else if (typeof duplicateCheck !== 'undefined') {
+        alert(`${newName} is already added to phonebook`)
+        setNewName('')
+        setNewNumber('')
+        return
     }
 
+    // If the name is not in phonebook, add a new person
     personService
       .create({ name: newName, number: newNumber })
       .then(response => {
