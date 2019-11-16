@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import './index.css'
 import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   // Application's effect
@@ -19,6 +21,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [confirmationMessage, setConfirmationMessage] = useState(null)
 
   // Event handlers
   const addName = (event) => {
@@ -53,7 +56,12 @@ const App = () => {
         setPersons(persons.concat(response))
         setNewName('')
         setNewNumber('')
-    })
+        setConfirmationMessage(`Added ${response.name}`)
+        setTimeout(() => {
+          setConfirmationMessage(null)
+        }, 5000)
+      })
+
   }
 
   const deleteName = (event) => {
@@ -70,10 +78,13 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+
+      <Notification message={confirmationMessage} />
+
       <Filter value={newFilter} onChange={handleFilterChange} />
 
-      <h3>add a new</h3>
+      <h2>add a new</h2>
       <PersonForm onSubmit={addName}
                   valueName={newName}
                   onChangeName={handleNameChange}
@@ -81,7 +92,7 @@ const App = () => {
                   onChangeNumber={handleNumberChange} 
       />
 
-      <h3>Numbers</h3>
+      <h2>Numbers</h2>
       <Persons filter={newFilter} persons={persons} deleteName={deleteName} />
     </div>
   )
