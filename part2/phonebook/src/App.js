@@ -21,7 +21,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
-  const [confirmationMessage, setConfirmationMessage] = useState(null)
+  const [message, setmessage] = useState(null)
+  const [messageType, setMessageType] = useState(null) // 'confirmation' or 'error'
 
   // Event handlers
   const addName = (event) => {
@@ -56,9 +57,11 @@ const App = () => {
         setPersons(persons.concat(response))
         setNewName('')
         setNewNumber('')
-        setConfirmationMessage(`Added ${response.name}`)
+        setMessageType('confirmation')
+        setmessage(`Added ${response.name}`)
         setTimeout(() => {
-          setConfirmationMessage(null)
+          setmessage(null)
+          setMessageType(null)
         }, 5000)
       })
 
@@ -67,9 +70,18 @@ const App = () => {
   const deleteName = (event) => {
     event.preventDefault()
     const id = parseInt(event.target.value)
+    const name = persons[id -1].name
     personService.remove(persons[id -1])
-    // Without the next line, a user would have to refresh the page manually.
-    setPersons(persons.filter(person => person.id !== id ))
+    .catch(error => {
+      setMessageType('error')
+      setmessage(`Information of ${name} has already been removed from server`)
+      setTimeout(() => {
+        setmessage(null)
+        setMessageType('error')
+      }, 5000)
+      setPersons(persons.filter(n => n.id !== id))
+    })
+    setPersons(persons.filter(n => n.id !== id))
   }
 
   const handleNameChange = (event) => setNewName(event.target.value)
@@ -80,7 +92,7 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
 
-      <Notification message={confirmationMessage} />
+      <Notification message={message} messageType={messageType} />
 
       <Filter value={newFilter} onChange={handleFilterChange} />
 
@@ -89,7 +101,7 @@ const App = () => {
                   valueName={newName}
                   onChangeName={handleNameChange}
                   valueNumber={newNumber}
-                  onChangeNumber={handleNumberChange} 
+                  onChangeNumber={handleNumberChange}
       />
 
       <h2>Numbers</h2>

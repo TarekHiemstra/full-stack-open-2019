@@ -18,7 +18,8 @@ const update = (id, newObject) => {
 
 const remove = (person) => {
   if (window.confirm(`Delete {person.name}`)) {
-    axios.delete(`${baseUrl}/${person.id}`)
+    return axios.delete(`${baseUrl}/${person.id}`)
+    .then(response => response.data)
   }
 }
 

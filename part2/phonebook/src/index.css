@@ -12,8 +12,7 @@ code {
     monospace;
 }
 
-.confirmation {
-  color: green;
+.confirmation, .error {
   background: lightgrey;
   font-size: 20px;
   border-style: solid;
@@ -21,3 +20,6 @@ code {
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.confirmation {color: green;}
+.error {color: red;}
