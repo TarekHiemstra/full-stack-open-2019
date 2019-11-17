@@ -1,8 +1,7 @@
 import React from 'react'
 import Country from './Country'
 
-
-const Countries = ({ filter, countries, showCountry }) => {
+const Countries = ({ filter, countries, weather, showCountry, handleCountryChange }) => {
 
   const countriesFiltered = countries.filter(country =>
     country.name.toLowerCase().includes(filter.toLowerCase()))
@@ -13,36 +12,20 @@ const Countries = ({ filter, countries, showCountry }) => {
       </div>
     )
   } else if (countriesFiltered.length === 1) {
+    // Set the capital city to get the right weather from weatherstack.com
+    handleCountryChange(countriesFiltered[0].capital)
+
     return (
-      countriesFiltered.map(country =>
-        <div key={country.name}>
-          <h1><Country name={country.name} /></h1>
-          <p>capital {country.capital}<br />population {country.population}</p>
-          <h2>languages</h2>
-          <ul>
-            {country.languages.map(language =>
-              <li key={language.name}>{language.name}<br /></li>
-            )}
-          </ul>
-          <p>
-            <img
-              src={country.flag}
-              alt={`Flag of ${country.name}`} 
-              height="60" 
-              width="60" 
-            />
-          </p>
+        <div key={countriesFiltered[0].name}>
+          <Country country={countriesFiltered[0]} weather={weather} />
         </div>
-      )
     )
   } else if (countriesFiltered.length <= 10) {
     return (
       countriesFiltered.map(country =>
         <div key={country.name}>
-          <Country name={country.name} />
-          <button type='button' value={country.name} onClick={showCountry}>
-            show
-          </button>
+          <span>{country.name}</span>
+          <button type='button' value={country.name} onClick={showCountry}>show</button>
           <br />
         </div>
       )

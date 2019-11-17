@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Filter = ({ value, onChange }) => {
+const TextField = ({ text, value, onChange }) => {
   return (
     <div>
-      <span>find countries </span>
+      <span>{text} </span>
       <input
         value={value}
         onChange={onChange}
@@ -12,4 +12,4 @@ const Filter = ({ value, onChange }) => {
   )
 }
 
-export default Filter
+export default TextField
