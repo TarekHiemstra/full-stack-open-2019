@@ -9,22 +9,22 @@ let persons = [
   {
     "name": "Arto Hellas",
     "number": "040-123456",
-    "id": 1
+    "id": 2337986436
   },
   {
     "name": "Ada Lovelace",
     "number": "39-44-5323523",
-    "id": 2
+    "id": 8309359343
   },
   {
     "name": "Dan Abramov",
     "number": "12-43-234345",
-    "id": 3
+    "id": 9306800825
   },
   {
     "name": "Mary Poppendieck",
     "number": "39-23-6423122",
-    "id": 4
+    "id": 3264606582
   }
 ]
 
@@ -38,12 +38,20 @@ const generateId = () => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
-  if (!body.name) {
+  // Check for errors
+  if (!body.name || !body.number)  {
     return response.status(400).json({
-      error: 'person missing'
+      error: 'name or number is missing'
+    })
+  }
+  const duplicateName = persons.find(person => person.name === body.name)
+  if (duplicateName) {
+    return response.status(400).json({
+      error: 'name must be unique' 
     })
   }
 
+  // If no errors, add a new person
   const person = {
     name: body.name,
     number: body.number,
