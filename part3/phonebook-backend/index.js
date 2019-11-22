@@ -2,8 +2,15 @@ const express = require('express')
 const app = express()
 
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 app.use(bodyParser.json())
+/*
+app.use(morgan('tiny')) for logging, which is the same as:
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+*/
+app.use(morgan('tiny'))
+
 
 let persons = [
   {
