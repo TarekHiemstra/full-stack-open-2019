@@ -5,12 +5,9 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
 app.use(bodyParser.json())
-/*
-app.use(morgan('tiny')) for logging, which is the same as:
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
-*/
-app.use(morgan('tiny'))
-
+//Create token for logging POST requests
+morgan.token('post', (req, res) => req.route.methods.post ? JSON.stringify(req.body) : undefined)
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post'))
 
 let persons = [
   {
@@ -44,7 +41,6 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-
   // Check for errors
   if (!body.name || !body.number)  {
     return response.status(400).json({
