@@ -69,19 +69,22 @@ const App = () => {
 
   const deleteName = (event) => {
     event.preventDefault()
-    const id = parseInt(event.target.value)
-    const name = persons[id -1].name
-    personService.remove(persons[id -1])
-    .catch(error => {
-      setMessageType('error')
-      setmessage(`Information of ${name} has already been removed from server`)
-      setTimeout(() => {
-        setmessage(null)
+    const personToBeRemoved = persons.find(person => person.id === Number(event.target.value))
+    const id = personToBeRemoved.id
+    const name = personToBeRemoved.name
+    if (window.confirm(`Delete ${name} ?`)) {
+      personService.remove(id)
+      .catch(error => {
         setMessageType('error')
-      }, 5000)
+        setmessage(`Information of ${name} has already been removed from server`)
+        setTimeout(() => {
+          setmessage(null)
+          setMessageType('error')
+        }, 5000)
+        setPersons(persons.filter(n => n.id !== id))
+      })
       setPersons(persons.filter(n => n.id !== id))
-    })
-    setPersons(persons.filter(n => n.id !== id))
+    }
   }
 
   const handleNameChange = (event) => setNewName(event.target.value)

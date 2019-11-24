@@ -6,13 +6,17 @@
   "scripts": {
     "start": "node index.js",
     "watch": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf build && cd ../phonebook-frontend && npm run build --prod && cp -r build ../phonebook-backend/"
   },
+  "proxy": "http://localhost:3001",
   "author": "Tarek Hiemstra",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "static": "^2.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.0"

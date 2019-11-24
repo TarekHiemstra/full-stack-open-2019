@@ -3,11 +3,39 @@ const app = express()
 
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
+
 
 app.use(bodyParser.json())
-//Create token for logging POST requests
-morgan.token('post', (req, res) => req.route.methods.post ? JSON.stringify(req.body) : undefined)
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post'))
+app.use(cors())
+app.use(express.static('build'))
+
+/*
+  Create token for logging POST requests. Only use the token when
+  the request is a POST request.
+*/
+morgan.token('post', (req, res) => JSON.stringify(req.body))
+app.use(morgan(function (tokens, req, res) {
+  console.log(tokens.method)
+  if (tokens.method(req, res) === "POST"){
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'), '-',
+      tokens['response-time'](req, res), 'ms',
+      tokens.post(req, res)
+    ].join(' ')
+  } else {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'), '-',
+      tokens['response-time'](req, res), 'ms'
+    ].join(' ')
+  }
+}))
 
 let persons = [
   {
@@ -92,7 +120,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
