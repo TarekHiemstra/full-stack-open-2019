@@ -10,3 +10,7 @@ In this part our focus shifts towards the backend, that is, towards implementing
 ## Exercises
 * [phonebook-backend](./phonebook-backend)
 * [phonebook-frontend](./phonebook-frontend)
+
+## Heroku URL of the application
+https://mighty-woodland-38899.herokuapp.com/
+

@@ -7,7 +7,10 @@
     "start": "node index.js",
     "watch": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "rm -rf build && cd ../phonebook-frontend && npm run build --prod && cp -r build ../phonebook-backend/"
+    "build:ui": "rm -rf build && cd ../phonebook-frontend && npm run build --prod && cp -r build ../phonebook-backend/",
+    "deploy": "cd ../.. && git subtree push --prefix part3/phonebook-backend heroku master",
+    "deploy:force": "cd ../.. && git push heroku `git subtree split --prefix part3/phonebook-backend master`:master --force",
+    "logs:prod": "heroku logs --tail"
   },
   "proxy": "http://localhost:3001",
   "author": "Tarek Hiemstra",
