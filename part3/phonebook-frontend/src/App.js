@@ -69,7 +69,7 @@ const App = () => {
 
   const deleteName = (event) => {
     event.preventDefault()
-    const personToBeRemoved = persons.find(person => person.id === Number(event.target.value))
+    const personToBeRemoved = persons.find(person => person.id === event.target.value)
     const id = personToBeRemoved.id
     const name = personToBeRemoved.name
     if (window.confirm(`Delete ${name} ?`)) {

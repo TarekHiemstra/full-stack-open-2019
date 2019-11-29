@@ -31,7 +31,6 @@ const person = new Person({
   number: number,
 })
 
-
 if (process.argv.length === 3) {
   console.log('\nphonebook:')
   Person
