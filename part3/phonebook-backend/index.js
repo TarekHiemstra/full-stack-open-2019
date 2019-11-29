@@ -76,6 +76,27 @@ const generateId = () => {
 }
 */
 
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+
+  // Check for missing name or number
+  if (!body.name || !body.number)  {
+    return res.status(400).json({
+      error: 'name or number is missing'
+    })
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  })
+
+  person
+    .save()
+    .then(savedPerson => savedPerson.toJSON())
+    .then(savedAndFormattedNote => res.json(savedAndFormattedNote))
+})
+
 app.get('/info', (req, res) => {
   Person.find({}).then(persons => {
     res.send(`<p>Phonebook has info for ${persons.length} people</p>
