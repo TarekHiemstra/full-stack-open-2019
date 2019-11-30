@@ -6,8 +6,11 @@ const url = process.env.MONGODB_URI
 /*
 Set the new Server Discover and Monitoring engine since the old one is
 deprecated and will be removed in a future version.
+Also set findAndModify() to false, since this is deprecated as well.
+See https://mongoosejs.com/docs/deprecations.html
 */
 mongoose.set('useUnifiedTopology', true)
+mongoose.set('useFindAndModify', false);
 
 mongoose.connect(url, { useNewUrlParser: true })
   .then(result => {
