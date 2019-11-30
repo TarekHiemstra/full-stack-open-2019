@@ -98,8 +98,7 @@ app.post('/api/persons', (req, res) => {
 app.get('/info', (req, res) => {
   Person.find({})
   .then(persons => {
-    res.send(`<p>Phonebook has info for ${persons.length} people</p>
-              <p>${new Date()}</p>`)
+    res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
   })
 })
 
@@ -113,6 +112,18 @@ app.get('/api/persons/:id', (req, res, next) => {
     .then(person => person ? res.json(person) : res.status(404).end())
     .catch(error => next(error))
 })
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => response.json(updatedPerson.toJSON()))
+    .catch(error => next(error))
+})
+
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)

@@ -31,18 +31,17 @@ const App = () => {
     // Check for duplicates
     const duplicateCheck = persons.find(person => person.name === newName)
     if (typeof duplicateCheck !== 'undefined' && duplicateCheck.number !== newNumber) {
-      personService
-        .update(duplicateCheck.id, { name: duplicateCheck.name, number: newNumber})
-        .then(returnedPerson => {
-          if (window.confirm(`${returnedPerson.name} is already added to phonebook, 
-            replace the old number with a new one?`)) {
-            setPersons(persons.map(person => 
-                      person.id !== duplicateCheck.id ? person : returnedPerson))
-          }
-          setNewName('')
-          setNewNumber('')
-        })
-        return
+      if (window.confirm(`${duplicateCheck.name} is already added to phonebook, replace the old number with a new one?`)) {
+        personService
+          .update(duplicateCheck.id, { name: duplicateCheck.name, number: newNumber})
+          .then(returnedPerson => {
+              setPersons(persons.map(person => 
+                        person.id !== duplicateCheck.id ? person : returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+      return
     } else if (typeof duplicateCheck !== 'undefined') {
         alert(`${newName} is already added to phonebook`)
         setNewName('')
