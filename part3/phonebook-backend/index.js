@@ -16,7 +16,6 @@ app.use(express.static('build'))
 */
 morgan.token('post', (req, res) => JSON.stringify(req.body))
 app.use(morgan(function (tokens, req, res) {
-  console.log(tokens.method)
   if (tokens.method(req, res) === "POST"){
     return [
       tokens.method(req, res),
@@ -37,44 +36,7 @@ app.use(morgan(function (tokens, req, res) {
   }
 }))
 
-/*
-Persons are now being stored in the database, so this array will not
-be used any more.
-let persons = [
-  {
-    "name": "Arto Hellas",
-    "number": "040-123456",
-    "id": 2337986436
-  },
-  {
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523",
-    "id": 8309359343
-  },
-  {
-    "name": "Dan Abramov",
-    "number": "12-43-234345",
-    "id": 9306800825
-  },
-  {
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122",
-    "id": 3264606582
-  }
-]
-*/
-
-/*
-The database generates the id, so this function will not be used anymore
-// Id is generated in a range between 1 and 10 billion
-const generateId = () => {
-  const max = 10000000000
-  const min = 1000000000
-  return(Math.floor((Math.random() * (max - min) + min)))
-}
-*/
-
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   // Check for missing name or number
@@ -93,6 +55,7 @@ app.post('/api/persons', (req, res) => {
     .save()
     .then(savedPerson => savedPerson.toJSON())
     .then(savedAndFormattedNote => res.json(savedAndFormattedNote))
+    .catch(error => next(error))
 })
 
 app.get('/info', (req, res) => {
@@ -124,7 +87,6 @@ app.put('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
     .then(result => res.status(204).end())
@@ -140,6 +102,8 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message)
   if (error.name === 'CastError' && error.kind == 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
   next(error)
 }
