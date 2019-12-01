@@ -35,15 +35,15 @@ if (process.argv.length === 3) {
   console.log('\nphonebook:')
   Person
     .find({})
-    .then(persons=> {
+    .then(persons => {
       persons.forEach( person => console.log(`${person.name} ${person.number}`))
       console.log('')
-      mongoose.connection.close();
+      mongoose.connection.close()
     })
 } else {
-    person.save().then(response => {
-      console.log(`added ${name} number ${number} to phonebook`);
-      mongoose.connection.close();
-    })
+  person.save().then(response => {
+    console.log(`added ${name} number ${number} to phonebook`)
+    mongoose.connection.close()
+  })
 }
 

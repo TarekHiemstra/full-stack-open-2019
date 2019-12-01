@@ -7,6 +7,8 @@
     "start": "node index.js",
     "watch": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "build:ui": "rm -rf build && cd ../phonebook-frontend && npm run build --prod && cp -r build ../phonebook-backend/",
     "deploy": "cd ../.. && git subtree push --prefix part3/phonebook-backend heroku master",
     "deploy:force": "cd ../.. && git push heroku `git subtree split --prefix part3/phonebook-backend master`:master --force",
@@ -25,6 +27,7 @@
     "static": "^2.0.0"
   },
   "devDependencies": {
+    "eslint": "^6.7.2",
     "nodemon": "^2.0.0"
   }
 }

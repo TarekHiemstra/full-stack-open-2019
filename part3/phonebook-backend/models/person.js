@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require('mongoose-unique-validator')
 const url = process.env.MONGODB_URI
 
 /*
@@ -9,8 +9,8 @@ Also fix two other deprecation warnings
 See https://mongoosejs.com/docs/deprecations.html
 */
 mongoose.set('useUnifiedTopology', true)
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 mongoose.connect(url, { useNewUrlParser: true })
   .then(result => {
