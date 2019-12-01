@@ -4,7 +4,7 @@ import Person from './Person'
 const Persons = ({ filter, persons, deleteName }) => {
   return (
     persons.filter(person =>
-      person.name.includes(filter)).map(person =>
+      person.name.toLowerCase().includes(filter.toLowerCase())).map(person =>
         <span key={person.id}>
           <Person 
             name={person.name} 

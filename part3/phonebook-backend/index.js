@@ -11,8 +11,8 @@ app.use(cors())
 app.use(express.static('build'))
 
 /*
-  Create token for logging POST requests. Only use the token when
-  the request is a POST request.
+Create token for logging POST requests. Only use the token when
+the request is a POST request.
 */
 morgan.token('post', (req, res) => JSON.stringify(req.body))
 app.use(morgan(function (tokens, req, res) {

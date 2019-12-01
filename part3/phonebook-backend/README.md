@@ -113,3 +113,152 @@ Generate a production build of your frontend, and add it to the internet applica
 **NB** Make sure the directory <i>build</i> is not gitignored
 
 Also make sure that the frontend still works locally. 
+
+## 3.12: Command-line database
+
+Create a cloud-based MongoDB database for the phonebook application with MongoDB Atlas. 
+
+Create a <i>mongo.js</i> file in the project directory, that can be used for adding entries to the phonebook, and for listing all of the existing entries in the phonebook.
+
+**NB** Do not include the password in the file that you commit and push to GitHub! 
+
+The application should work as follows. You use the program by passing three command-line arguments (the first is the password), e.g.:
+
+```bash
+node mongo.js yourpassword Anna 040-1234556
+```
+
+As a result, the application will print:
+
+```bash
+added Anna number 040-1234556 to phonebook
+```
+
+The new entry to the phonebook will be saved to the database. Notice that if the name contains whitespace characters, it must be enclosed in quotes:
+
+```bash
+node mongo.js yourpassword "Arto Vihavainen" 040-1234556
+```
+
+If the password is the only parameter given to the program, meaning that it is invoked like this:
+
+```bash
+node mongo.js yourpassword
+```
+
+Then the program should display all of the entries in the phonebook:
+
+<pre>
+phonebook:
+Anna 040-1234556
+Arto Vihavainen 045-1232456
+Ada Lovelace 040-1231236
+</pre>
+
+You can get the command-line parameters from the [process.argv](https://nodejs.org/docs/latest-v8.x/api/process.html#process_process_argv) variable.
+
+**NB: do not close the connection in the wrong place**. E.g. the following code will not work:
+
+```js
+Person
+  .find({})
+  .then(persons=> {
+    // ...
+  })
+
+mongoose.connection.close()
+```
+
+In the code above the <i>mongoose.connection.close()</i> command will get executed immediately after the <i>Person.find</i> operation is started. This means that the database connection will be closed immediately, and the execution will never get to the point where <i>Person.find</i> operation finishes and the <i>callback</i> function gets called.
+
+The correct place for closing the database connection is at the end of the callback function:
+
+```js
+Person
+  .find({})
+  .then(persons=> {
+    // ...
+    mongoose.connection.close()
+  })
+```
+
+**NB2** if you define a model with the name <i>Person</i>, mongoose will automatically name the associated collection as <i>people</i>.
+
+The following exercises are pretty straightforward, but if your frontend stops working with the backend, then finding and fixing the bugs can be quite interesting.
+
+## 3.13: Phonebook database, step1
+
+Change the fetching of all phonebook entries so that the data is <i>fetched from the database</i>.
+
+Verify that the frontend works after the changes have been made.
+
+In the following exercises, write all Mongoose-specific code into its own module, just like we did in the chapter [Database configuration into its own module](https://fullstackopen.com/en/part3/saving_data_to_mongo_db#database-configuration-into-its-own-module).
+
+## 3.14: Phonebook database, step2
+
+Change the backend so that new numbers are <i>saved to the database</i>. Verify that your frontend still works after the changes.
+
+At this point, you can choose to simply allow users to create all phonebook entries. At this stage, the phonebook can have multiple entries for a person with the same name.
+
+
+## 3.15: Phonebook database, step3
+
+Change the backend so that deleting phonebook entries is reflected in the database.
+
+Verify that the frontend still works after making the changes.
+
+## 3.16: Phonebook database, step4
+
+Move the error handling of the application to a new error handler middleware.
+
+## 3.17\*: Phonebook database, step5
+
+If the user tries to create a new phonebook entry for a person whose name is already in the phonebook, the frontend will try to update the phone number of the existing entry by making an HTTP PUT request to the entry's unique URL.
+
+Modify the backend to support this request.
+
+Verify that the frontend works after making your changes.
+
+## 3.18\*: Phonebook database step6
+
+Also update the handling of the <i>api/persons/:id</i> and <i>info</i> routes to use the database, and verify that they work directly with the browser, Postman, or VS Code REST client.
+
+Inspecting an individual phonebook entry from the browser should look like this:
+
+![fullstack content](https://fullstackopen.com/static/853a1d57372a2b5c8fc1249b682d59a7/14be6/49.png)
+
+## 3.19: Phonebook database, step7
+
+Add validation to your application, that will make sure that you can only add one number for a person in the phonebook. Our current frontend won't allow users to try and create duplicates, but we can attempt to create them directly with Postman or the VS Code REST client.
+
+Mongoose does not offer a built-in validator for this purpose. Install the [mongoose-unique-validator](https://github.com/blakehaswell/mongoose-unique-validator#readme) package with npm and use it instead.
+
+If an HTTP POST request tries to add a name that is already in the phonebook, the server must respond with an appropriate status code and error message.
+
+## 3.20\*: Phonebook database, step8
+
+Expand the validation so that the name stored in the database has to be at least three characters long, and the phone number must have at least 8 digits.
+
+Expand the frontend so that it displays some form of error message when a validation error occurs. Error handling can be implemented by adding a <em>catch</em> block as shown below:
+
+```js
+personService
+    .create({ ... })
+    .then(createdPerson => {
+      // ...
+    })
+    .catch(error => {
+      // this is the way to access the error message
+      console.log(error.response.data)
+    })
+```
+
+You can display the default error message returned by Mongoose, even though they are not as readable as they could be:
+
+![fullstack content](https://fullstackopen.com/static/fddf847e340f060549c3029f464a5493/14be6/56e.png)
+
+## 3.21 Deploying the database backend to production
+
+Generate a new "full stack" version of the application by creating a new production build of the frontend, and copy it to the backend repository. Verify that everything works locally by using the entire application from the address <https://localhost:3001>.
+
+Push the latest version to Heroku and verify that everything works there as well.

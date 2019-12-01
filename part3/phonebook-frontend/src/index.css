@@ -23,3 +23,7 @@ code {
 
 .confirmation {color: green;}
 .error {color: red;}
+
+body {
+  margin-left: 10px;
+}

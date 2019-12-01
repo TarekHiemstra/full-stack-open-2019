@@ -7,14 +7,6 @@ import Persons from './components/Persons'
 import Notification from './components/Notification'
 
 const App = () => {
-  // Application's effect
-  useEffect(() => {
-    personService
-      .getAll()
-        .then(initialPersons => {
-        setPersons(initialPersons)
-        })
-  }, [])
 
   // Application's state
   const [persons, setPersons] = useState([])
@@ -23,6 +15,15 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
   const [message, setmessage] = useState(null)
   const [messageType, setMessageType] = useState(null) // 'confirmation' or 'error'
+
+  // Application's effect
+  useEffect(() => {
+    personService
+      .getAll()
+        .then(initialPersons => {
+        setPersons(initialPersons)
+        })
+  }, [])
 
   // Event handlers
   const addName = (event) => {
@@ -100,11 +101,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-
       <Notification message={message} messageType={messageType} />
-
       <Filter value={newFilter} onChange={handleFilterChange} />
-
       <h2>add a new</h2>
       <PersonForm onSubmit={addName}
                   valueName={newName}
@@ -112,7 +110,6 @@ const App = () => {
                   valueNumber={newNumber}
                   onChangeNumber={handleNumberChange}
       />
-
       <h2>Numbers</h2>
       <Persons filter={newFilter} persons={persons} deleteName={deleteName} />
     </div>
