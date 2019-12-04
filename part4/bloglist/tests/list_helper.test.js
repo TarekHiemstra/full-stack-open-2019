@@ -66,12 +66,14 @@ const listWithManyBlogs = [
   }
 ]
 
+// Testing the dummy function
 test('dummy returns one', () => {
   const blogs = []
   const result = listHelper.dummy(blogs)
   expect(result).toBe(1)
 })
 
+// Testing the totalLikes function
 describe('total likes', () => {
 
   test('of empty list is zero', () => {
@@ -90,6 +92,7 @@ describe('total likes', () => {
   })
 })
 
+// Testing the favoriteBlog function
 describe('which blog has most likes', () => {
 
   test('of empty list with zero blogs', () => {
@@ -124,4 +127,11 @@ describe('which blog has most likes', () => {
     }
     expect(result).toEqual(expected)
   })
+})
+
+// Testing the mostBlogs function
+test('author with most blogs', () => {
+  const result = listHelper.mostBlogs(listWithManyBlogs)
+  const expected = { author: 'Robert C. Martin', blogs: 3 }
+  expect(result).toEqual(expected)
 })
