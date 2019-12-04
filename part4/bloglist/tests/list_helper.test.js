@@ -1,4 +1,5 @@
 const listHelper = require('../utils/list_helper')
+const _ = require('lodash')
 
 const listWithZeroBlogs = [
   {}
@@ -115,7 +116,7 @@ describe('which blog has most likes', () => {
   test('of many blogs with more than one blog that has the max value', () => {
 
     // Second blog will now get the same number of likes as the third blog
-    const listWithManyBlogsCopy = [ ...listWithManyBlogs ]
+    const listWithManyBlogsCopy = _.cloneDeep(listWithManyBlogs)
     listWithManyBlogsCopy[1].likes = 12
 
     const result = listHelper.favoriteBlog(listWithManyBlogsCopy)
@@ -133,5 +134,12 @@ describe('which blog has most likes', () => {
 test('author with most blogs', () => {
   const result = listHelper.mostBlogs(listWithManyBlogs)
   const expected = { author: 'Robert C. Martin', blogs: 3 }
+  expect(result).toEqual(expected)
+})
+
+// Testing the mostLikes function
+test('author with most likes', () => {
+  const result = listHelper.mostLikes(listWithManyBlogs)
+  const expected = { author: 'Edsger W. Dijkstra', likes: 17 }
   expect(result).toEqual(expected)
 })
