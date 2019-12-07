@@ -34,7 +34,6 @@ const mostLikes = (blogs) => {
     .sortBy('likes')
     .last()
     .value()
-  console.log(authorWithMostLikes)
   return authorWithMostLikes
 }
 
