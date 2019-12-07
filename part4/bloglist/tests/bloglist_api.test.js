@@ -58,6 +58,26 @@ describe('post requests', () => {
       'Type wars'
     )
   })
+
+  test('if likes property is missing, it will get value 0', async() => {
+    const newBlog = {
+      _id: '5a422bc61b54a676234d17fc',
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      __v: 0
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const likes = blogsAtEnd.map(n => n.likes)
+    expect(likes).not.toContain(undefined)
+  })
 })
 
 afterAll(() => {
