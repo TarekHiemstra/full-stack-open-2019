@@ -14,7 +14,7 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-describe('get requests', () => {
+describe('GET requests', () => {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -33,7 +33,7 @@ describe('get requests', () => {
   })
 })
 
-describe('post requests', () => {
+describe('POST requests', () => {
   test('succeeds with valid data', async () => {
     const newBlog = {
       _id: '5a422bc61b54a676234d17fc',
@@ -52,7 +52,6 @@ describe('post requests', () => {
 
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
-
     const contents = blogsAtEnd.map(n => n.title)
     expect(contents).toContain(
       'Type wars'
@@ -98,7 +97,30 @@ describe('post requests', () => {
   })
 })
 
-describe('delete requests', () => {
+describe('PUT requests', () => {
+  test('succeeds with valid data', async () => {
+    // Update the blog from 12 to 1000 likes.
+    const updatedBlog = {
+      'title': 'Canonical string reduction',
+      'author': 'Edsger W. Dijkstra',
+      'url': 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+      'likes': 1000
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(updatedBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+    const contents = blogsAtEnd.map(n => n.likes)
+    expect(contents).toContain(updatedBlog.likes)
+  })
+})
+
+describe('DELETE requests', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
