@@ -33,6 +33,33 @@ describe('get requests', () => {
   })
 })
 
+describe('post requests', () => {
+  test('succeeds with valid data', async () => {
+    const newBlog = {
+      _id: '5a422bc61b54a676234d17fc',
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      likes: 2,
+      __v: 0
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+
+    const contents = blogsAtEnd.map(n => n.title)
+    expect(contents).toContain(
+      'Type wars'
+    )
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
