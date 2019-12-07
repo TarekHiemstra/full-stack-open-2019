@@ -78,6 +78,24 @@ describe('post requests', () => {
     const likes = blogsAtEnd.map(n => n.likes)
     expect(likes).not.toContain(undefined)
   })
+
+  test('if backend responds with 400 if title and url are missing', async() => {
+    const newBlog = {
+      _id: '5a422bc61b54a676234d17fc',
+      author: 'Robert C. Martin',
+      likes: 2,
+      __v: 0
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const id = blogsAtEnd.map(n => n.id)
+    expect(id).not.toContain('5a422bc61b54a676234d17fc')
+  })
 })
 
 afterAll(() => {
