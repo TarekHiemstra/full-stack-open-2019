@@ -14,11 +14,13 @@
   "author": "Tarek Hiemstra",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^3.0.7",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "lodash": "^4.17.15",
-    "mongoose": "^5.7.13"
+    "mongoose": "^5.7.13",
+    "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
