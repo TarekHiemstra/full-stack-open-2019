@@ -109,14 +109,15 @@ describe('Blog model', () => {
         'likes': 1000
       }
 
+      const blogsAtStart = await helper.blogsInDb()
       await api
-        .post('/api/blogs')
+        .put(`/api/blogs/${blogsAtStart[2].id}`)
         .send(updatedBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
       const blogsAtEnd = await helper.blogsInDb()
-      expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+      expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
       const contents = blogsAtEnd.map(n => n.likes)
       expect(contents).toContain(updatedBlog.likes)
     })
@@ -166,6 +167,96 @@ describe('User model', () => {
     test('the unique identifier property of the user is named id', async () => {
       const response = await api.get('/api/users')
       expect(response.body[0].id).toBeDefined()
+    })
+  })
+
+  describe('POST requests', () => {
+    beforeEach(async () => {
+      await User.deleteMany({})
+      const user = new User({ username: 'root', password: 'sekret' })
+      await user.save()
+    })
+
+    test('creation succeeds with a fresh username', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'mluukkai',
+        name: 'Matti Luukkainen',
+        password: 'salainen',
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd.length).toBe(usersAtStart.length + 1)
+
+      const usernames = usersAtEnd.map(u => u.username)
+      expect(usernames).toContain(newUser.username)
+    })
+
+    test('creation fails with proper statuscode and message if username already taken', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'root',
+        name: 'Superuser',
+        password: 'salainen',
+      }
+
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      expect(result.body.error).toContain('`username` to be unique')
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd.length).toBe(usersAtStart.length)
+    })
+
+    test('creation fails if username is smaller than 3 characters', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'ml',
+        name: 'Matti Luukkainen',
+        password: 'salainen',
+      }
+
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      expect(result.body.error).toContain('is shorter than the minimum allowed length (3)')
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd.length).toBe(usersAtStart.length)
+    })
+
+    test('creation fails if password is smaller than 3 characters', async () => {
+      const usersAtStart = await helper.usersInDb()
+
+      const newUser = {
+        username: 'mluukkai',
+        name: 'Matti Luukkainen',
+        password: 'sa',
+      }
+
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const usersAtEnd = await helper.usersInDb()
+      expect(usersAtEnd.length).toBe(usersAtStart.length)
     })
   })
 })
