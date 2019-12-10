@@ -1,6 +1,6 @@
 {
   "name": "bloglist",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "Application that allows users to save information about interesting blogs they have stumbled across on the internet.",
   "main": "index.js",
   "scripts": {

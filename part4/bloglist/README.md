@@ -125,7 +125,7 @@ describe('total likes', () => {
 
 If defining your own test input list of blogs is too much work, you can use the ready-made list [here](https://github.com/fullstackopen-2019/misc/blob/master/blogs_for_test.md).
 
-You are bound to run into problems while writing tests. Remember the things that we learned about [debugging](/en/part3/saving_data_to_mongo_db#debugging-node-applications) in part 3. You can print things to the console with _console.log_ even during test execution. It is even possible to use the debugger while running tests, you can find instructions for that [here](https://jestjs.io/docs/en/troubleshooting).
+You are bound to run into problems while writing tests. Remember the things that we learned about [debugging](https://fullstackopen.com/en/part3/saving_data_to_mongo_db#debugging-node-applications) in part 3. You can print things to the console with _console.log_ even during test execution. It is even possible to use the debugger while running tests, you can find instructions for that [here](https://jestjs.io/docs/en/troubleshooting).
 
 **NB:** if some test is failing, then it is recommended to only run that test while you are fixing the issue. You can run a single test with the [only](https://facebook.github.io/jest/docs/en/api.html#testonlyname-fn-timeout) method.
 
@@ -183,3 +183,170 @@ Define a function called _mostLikes_ that receives an array of blogs as its para
 
 If there are many top bloggers, then it is enough to show any one of them.
 
+**NB:** the material uses the [toContain](https://facebook.github.io/jest/docs/en/expect.html#tocontainitem) matcher in several places to verify that an array contains a specific element. It's worth noting that the method uses the === operator for comparing and matching elements, which means that it is often not well-suited for matching objects. In most cases, the appropriate method for verifying objects in arrays is the [toContainEqual](https://facebook.github.io/jest/docs/en/expect.html#tocontainequalitem) matcher. However, the model solutions don't check for objects in arrays with matchers, so using the method is not required for solving the exercises.
+
+
+**Warning:** If you find yourself using async/await and <i>then</i> methods in the same code, it is almost guaranteed that you are doing something wrong. Use one or the other and don't mix the two.
+
+## 4.8: Blog list tests, step1
+
+Use the supertest package for writing a test that makes an HTTP GET request to the <i>/api/blogs</i> url. Verify that the blog list application returns the correct amount of blog posts in the JSON format.
+
+Once the test is finished, refactor the route handler to use the async/await syntax instead of promises.
+
+Notice that you will have to make similar changes to the code that were made [in the material](https://fullstackopen.com/en/part4/testing_the_backend#test-environment), like defining the test environment so that you can write tests that use their own separate database.
+
+**NB:** When running the tests, you may run into the following warning:
+
+![fullstack content](https://fullstackopen.com/static/e8bcb367be162a9be3c71b7f47d855a2/14be6/8a.png)
+
+If this happens, follow the [instructions](https://mongoosejs.com/docs/jest.html) and create a new <i>jest.config.js</i> file at the root of the project with the following contents:
+
+```js
+module.exports = {
+  testEnvironment: 'node'
+}
+```
+
+**NB:** when you are writing your tests **<i>it is better to not execute all of your tests</i>**, only execute the ones you are working on. Read more about this [here](https://fullstackopen.com/en/part4/testing_the_backend#running-tests-one-by-one).
+
+## 4.9\*: Blog list tests, step2
+
+Write a test that verifies that the unique identifier property of the blog posts is named <i>id</i>, by default the database names the property <i>\_id</i>. Verifying the existence of a property is easily done with Jest's [toBeDefined](https://jestjs.io/docs/en/expect#tobedefined) matcher.
+
+Make the required changes to the code so that it passes the test. The [toJSON](https://fullstackopen.com/en/part3/saving_data_to_mongo_db#backend-connected-to-a-database) method discussed in part 3 is an appropriate place for defining the <i>id</i> parameter.
+
+## 4.10: Blog list tests, step3
+
+Write a test that verifies that making an HTTP POST request to the <i>/api/blogs</i> url successfully creates a new blog post. At the very least, verify that the total number of blogs in the system is increased by one. You can also verify that the content of the blog post is saved correctly to the database.
+
+Once the test is finished, refactor the operation to use async/await instead of promises.
+
+## 4.11\*: Blog list tests, step4
+
+Write a test that verifies that if the <i>likes</i> property is missing from the request, it will default to the value 0. Do not test the other properties of the created blogs yet.
+
+Make the required changes to the code so that it passes the test.
+
+## 4.12\*: Blog list tests, step5
+
+Write a test related to creating new blogs via the <i>/api/blogs</i> endpoint, that verifies that if the <i>title</i> and <i>url</i> properties are missing from the request data, the backend responds to the request with the status code <i>400 Bad Request</i>.
+
+Make the required changes to the code so that it passes the test.
+
+## 4.13 Blog list expansions, step1
+
+Implement functionality for deleting a single blog post resource.
+
+Use the async/await syntax. Follow [RESTful](https://fullstackopen.com/en/part3/node_js_and_express#rest) conventions when defining the HTTP API.
+
+Feel free to implement tests for the functionality if you want to. Otherwise verify that the functionality works with Postman or some other tool.
+
+## 4.14 Blog list expansions, step2
+
+Implement functionality for updating the information of an individual blog post.
+
+Use async/await.
+
+The application mostly needs to update the amount of <i>likes</i> for a blog post. You can implement this functionality the same way that we implemented updating notes in [part 3](https://fullstackopen.com/en/part3/saving_data_to_mongo_db#other-operations).
+
+Feel free to implement tests for the functionality if you want to. Otherwise verify that the functionality works with Postman or some other tool.
+
+In the next exercises, basics of user management will be implemented for the Bloglist application. The safest way is to follow the story from part 4 chapter [User administration](https://fullstackopen.com/en/part4/user_administration) to the chapter [Token-based authentication](https://fullstackopen.com/en/part4/token_authentication). You can of course also use your creativity. 
+
+**One more warning:** If you notice you are mixing async/await and _then_ calls, it is 99% certain you are doing something wrong. Use either or, never both. 
+
+## 4.15: bloglist expansion, step4
+
+Implement a way to create new users by doing a HTTP POST-request to address <i>api/users</i>. Users have <i>username
+, password and name</i>.
+
+Do not save passwords to the database as clear text, but use the <i>bcrypt</i> library like we did in part 4 chapter [Creating new users](https://fullstackopen.com/en/part4/user_administration#creating-users).
+
+**NB** Some Windows users have had problems with <i>bcrypt</i>. If you run into problems, remove the library with command 
+
+```bash
+npm uninstall bcrypt --save 
+```
+
+and install [bcryptjs](https://www.npmjs.com/package/bcryptjs) instead. 
+
+Implement a way to see the details of all users by doing a suitable HTTP request. 
+
+List of users can for example, look as follows: 
+
+![fullstack content](https://fullstackopen.com/static/b59bda1bd7e5987a5c805332d509e516/14be6/22.png)
+
+## 4.16\*: bloglist expansion, step5
+
+Add a feature which adds the following restrictions to creating new users: Both username and password must be given. Both username and password must be at least 3 characters long. The username must be unique. 
+
+The operation must respond with a suitable status code and some kind of an error message if invalid user is created. 
+
+**NB** Do not test password restrictions with Mongoose validations. It is not a good idea because the password received by the backend and the password hash saved to the database are not the same thing. The password length should be validated in the controller like we did in [part 3](https://fullstackopen.com/en/part3/validation_and_es_lint) before using Mongoose validation. 
+
+Also, implement tests which check that invalid users are not created and invalid add user operation returns a suitable status code and error message. 
+
+## 4.17: bloglist expansion, step6
+
+Expand blogs so that each blog contains information on the creator of the blog. 
+
+Modify adding new blogs so that when a new blog is created,  <i>any</i> user from the database is designated as its creator (for example the one found first). Implement this according to part 4 chapter [populate](https://fullstackopen.com/en/part4/user_administration#populate).
+Which user is designated as the creator does not matter just yet. The functionality is finished in exercise 4.19. 
+
+Modify listing all blogs so that the creator's user information is displayed with the blog: 
+
+![fullstack content](https://fullstackopen.com/static/199682ad74f50747c90997a967856ffa/14be6/23e.png)
+
+and listing all users also displays the blogs created by each user: 
+
+![fullstack content](https://fullstackopen.com/static/ac9967c89785b33440e9b1b4e87c17e5/14be6/24e.png)
+
+## 4.18: bloglist expansion, step7
+
+Implement token-based authentication according to part 4 chapter [Token authentication](https://fullstackopen.com/en/part4/token_authentication).
+
+## 4.19: bloglist expansion, step8
+
+Modify adding new blogs so that it is only possible if a valid token is sent with the HTTP POST request. The user identified by the token is designated as the creator of the blog. 
+
+## 4.20\*: bloglist expansion, step9
+
+[This example](https://fullstackopen.com/en/part4/token_authentication) from part 4 shows taking the token from the header with the _getTokenFrom_ helper function.
+
+If you used the same solution, refactor taking the token to a [middleware](https://fullstackopen.com/en/part3/node_js_and_express#middleware). The middleware should take the token from the <i>Authorization</i> header and place it to the <i>token</i> field of the <i>request</i> object. 
+
+In other words, if you register this middleware in the <i>app.js</i> file before all routes
+
+```js
+app.use(middleware.tokenExtractor)
+```
+
+routes can access the token with _request.token_:
+```js
+blogsRouter.post('/', async (request, response) => {
+  // ..
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  // ..
+})
+```
+
+## 4.21\*: bloglist expansion, step10
+
+Change the delete blog operation so that a blog can be deleted only by the user who added the blog. Therefore, deleting a blog is possible only if the token sent with the request is the same as that of the blog's creator. 
+
+If deleting a blog is attempted without a token or by a wrong user, the operation should return a suitable status code. 
+
+Note that if you fetch a blog from the database,
+
+```js
+const blog = await Blog.findById(...)
+```
+
+the field <i>blog.user</i> does not contain a string, but an Object. So if you want to compare the id of the object fetched from the database and a string id, normal comparison operation does not work. The id fetched from the database must be parsed into a string first. 
+
+```js
+if ( blog.user.toString() === userid.toString() ) ...
+```
+
+This is the last exercise for this part of the course and it's time to push your code to GitHub and mark all of your finished exercises to the [exercise submission system](https://studies.cs.helsinki.fi/fullstackopen2019).
