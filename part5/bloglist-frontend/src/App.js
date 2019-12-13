@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import Blogs from './components/Blogs'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,16 +13,11 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
-    blogService
-      .getAll().then(initialBlogs => {
-        setBlogs(initialBlogs)
-      })
-  }, [])
+    blogService.getAll().then(initialBlogs => { setBlogs(initialBlogs) })
 
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -44,9 +39,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong username or password')
+      setMessage('Wrong username or password')
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
       }, 5000)
     }
   }
@@ -68,9 +63,9 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(data => {
-        setErrorMessage(`a new blog ${newTitle} by ${newAuthor} added`)
+        setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
         setTimeout(() => {
-          setErrorMessage(null)
+          setMessage(null)
         }, 5000)
         setBlogs(blogs.concat(data))
         setNewTitle('')
@@ -79,78 +74,35 @@ const App = () => {
       })
   }
 
-  if (user === null) {
-    return (
-      <div>
-        <h2>Log in to application</h2>
-        <Notification message={errorMessage} />
-        <form onSubmit={handleLogin}>
-          <div>
-            username
-              <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            password
-              <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    )
-  }
-
   return (
     <div>
-      <h2>blogs</h2>
-      <Notification message={errorMessage} />
-      <p>
-        {user.name} logged in
-        <button type='button' onClick={handleLogout}>logout</button>
-      </p>
-      <br /><h2>create new</h2><br />
-      <form onSubmit={addBlog}>
-          <div>
-            title:
-              <input
-              type="text"
-              value={newTitle}
-              name="Title"
-              onChange={({ target }) => setNewTitle(target.value)}
-            />
-          </div>
-          <div>
-            author:
-              <input
-              type="text"
-              value={newAuthor}
-              name="Author"
-              onChange={({ target }) => setNewAuthor(target.value)}
-            />
-          </div>
-          <div>
-            url:
-              <input
-              type="text"
-              value={newUrl}
-              name="URL"
-              onChange={({ target }) => setNewUrl(target.value)}
-            />
-          </div>
-          <button type="submit">create</button>
-        </form>
-        {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-        )}
+      {user === null ?
+        <div>
+          <LoginForm
+            handleLogin={handleLogin}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            username={username}
+            password={password}
+            message={message}
+          />
+        </div> :
+        <div>
+          <BlogForm
+            handleAdding={addBlog}
+            handleLogout={handleLogout}
+            handleTitleChange={({ target }) => setNewTitle(target.value)}
+            handleAuthorChange={({ target }) => setNewAuthor(target.value)}
+            handleUrlChange={({ target }) => setNewUrl(target.value)}
+            title={newTitle}
+            author={newAuthor}
+            url={newUrl}
+            blogs={blogs}
+            message={message}
+          />
+          <Blogs blogs={blogs} />
+        </div>
+      }
     </div>
   )
 }
