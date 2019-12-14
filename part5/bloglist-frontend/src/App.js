@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import Heading from './components/Heading'
+import CurrentUser from './components/CurrentUser'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Blogs from './components/Blogs'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -14,6 +17,7 @@ const App = () => {
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
   const [message, setMessage] = useState(null)
+  const blogFormRef = React.createRef()
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => { setBlogs(initialBlogs) })
@@ -54,6 +58,7 @@ const App = () => {
 
   const addBlog = (event) => {
     event.preventDefault()
+    blogFormRef.current.toggleVisibility()
     const blogObject = {
       title: newTitle,
       author: newAuthor,
@@ -77,20 +82,22 @@ const App = () => {
   return (
     <div>
       {user === null ?
-        <div>
-          <LoginForm
-            handleLogin={handleLogin}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            username={username}
-            password={password}
-            message={message}
-          />
-        </div> :
-        <div>
+      <div>
+        <Heading text={'log in to application'} message={message} />
+        <LoginForm
+          handleLogin={handleLogin}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          username={username}
+          password={password}
+        />
+      </div> :
+      <div>
+        <Heading text={'blogs'} message={message} />
+        <CurrentUser user={user} handleLogout={handleLogout} />
+        <Togglable buttonLabel="new blog" ref={blogFormRef}>
           <BlogForm
             handleAdding={addBlog}
-            handleLogout={handleLogout}
             handleTitleChange={({ target }) => setNewTitle(target.value)}
             handleAuthorChange={({ target }) => setNewAuthor(target.value)}
             handleUrlChange={({ target }) => setNewUrl(target.value)}
@@ -98,10 +105,10 @@ const App = () => {
             author={newAuthor}
             url={newUrl}
             blogs={blogs}
-            message={message}
           />
-          <Blogs blogs={blogs} />
-        </div>
+        </Togglable>
+        <Blogs blogs={blogs} />
+      </div>
       }
     </div>
   )
