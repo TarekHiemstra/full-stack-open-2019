@@ -5,6 +5,7 @@ const Blogs = ({ blogs, users, handleLikes }) => {
   return (
     <div>
       {blogs
+        .sort((a, b) => b.likes - a.likes)
         .map(blog => {
           /*
           after liking or creating a blog, blog.user.id does not exists and blog.user only contains 
