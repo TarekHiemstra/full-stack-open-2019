@@ -42,6 +42,7 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
       setUser(user)
+      blogService.setToken(user.token)
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -99,6 +100,19 @@ const App = () => {
       })
   }
 
+  const handleRemove = (event) => {
+    event.preventDefault()
+    const id = event.target.value
+    const blog = blogs.find(n => n.id === id)
+    if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
+      blogService.remove(id)
+      .catch(error => {
+         setBlogs(blogs.filter(n => n.id !== id))
+      })
+      setBlogs(blogs.filter(n => n.id !== id))
+    }
+  }
+
   return (
     <div>
       {user === null ?
@@ -127,7 +141,7 @@ const App = () => {
             blogs={blogs}
           />
         </Togglable>
-        <Blogs blogs={blogs} users={users} handleLikes={handleLikes} />
+        <Blogs blogs={blogs} users={users} handleLikes={handleLikes} handleRemove={handleRemove} />
       </div>
       }
     </div>
