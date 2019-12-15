@@ -10,6 +10,7 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [users, setUsers] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -20,6 +21,7 @@ const App = () => {
   const blogFormRef = React.createRef()
 
   useEffect(() => {
+    blogService.getAllUsers().then(users => { setUsers(users) })
     blogService.getAll().then(initialBlogs => { setBlogs(initialBlogs) })
 
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -88,14 +90,13 @@ const App = () => {
       author: blog.author,
       url: blog.url,
       likes: blog.likes + 1,
-      user: blog.user.id
+      user: blog.user.id || blog.user // Now it will also work after adding a new blog or after liking a blog
     }
     blogService
       .update(id, changedBlog)
       .then(returnedBlog => {
         setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
       })
-    window.location.reload(false)
   }
 
   return (
@@ -126,7 +127,7 @@ const App = () => {
             blogs={blogs}
           />
         </Togglable>
-        <Blogs blogs={blogs} handleLikes={handleLikes} />
+        <Blogs blogs={blogs} users={users} handleLikes={handleLikes} />
       </div>
       }
     </div>
