@@ -32,7 +32,7 @@ const App = () => {
     }
   }, [])
 
- const handleLogin = async (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const user = await loginService.login({
@@ -106,9 +106,10 @@ const App = () => {
     const blog = blogs.find(n => n.id === id)
     if (window.confirm(`remove blog ${blog.title} by ${blog.author}`)) {
       blogService.remove(id)
-      .catch(error => {
-         setBlogs(blogs.filter(n => n.id !== id))
-      })
+      // eslint-disable-next-line no-unused-vars
+        .catch(error => {
+          setBlogs(blogs.filter(n => n.id !== id))
+        })
       setBlogs(blogs.filter(n => n.id !== id))
     }
   }
@@ -116,36 +117,35 @@ const App = () => {
   return (
     <div>
       {user === null ?
-      <div>
-        <Heading text={'log in to application'} message={message} />
-        <LoginForm
-          handleLogin={handleLogin}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          username={username}
-          password={password}
-        />
-      </div> :
-      <div>
-        <Heading text={'blogs'} message={message} />
-        <CurrentUser user={user} handleLogout={handleLogout} />
-        <Togglable buttonLabel="new blog" ref={blogFormRef}>
-          <BlogForm
-            handleAdding={addBlog}
-            handleTitleChange={({ target }) => setNewTitle(target.value)}
-            handleAuthorChange={({ target }) => setNewAuthor(target.value)}
-            handleUrlChange={({ target }) => setNewUrl(target.value)}
-            title={newTitle}
-            author={newAuthor}
-            url={newUrl}
-            blogs={blogs}
+        <div>
+          <Heading text={'log in to application'} message={message} />
+          <LoginForm
+            handleLogin={handleLogin}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            username={username}
+            password={password}
           />
-        </Togglable>
-        <Blogs blogs={blogs} users={users} handleLikes={handleLikes} handleRemove={handleRemove} />
-      </div>
+        </div> :
+        <div>
+          <Heading text={'blogs'} message={message} />
+          <CurrentUser user={user} handleLogout={handleLogout} />
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+            <BlogForm
+              handleAdding={addBlog}
+              handleTitleChange={({ target }) => setNewTitle(target.value)}
+              handleAuthorChange={({ target }) => setNewAuthor(target.value)}
+              handleUrlChange={({ target }) => setNewUrl(target.value)}
+              title={newTitle}
+              author={newAuthor}
+              url={newUrl}
+            />
+          </Togglable>
+          <Blogs blogs={blogs} users={users} handleLikes={handleLikes} handleRemove={handleRemove} />
+        </div>
       }
     </div>
   )
 }
 
-export default App;
+export default App

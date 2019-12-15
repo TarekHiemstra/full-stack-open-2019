@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 const Blog = ({ blog, user, handleLikes, handleRemove }) => {
   const [expanded, setExpanded] = useState(false)
@@ -19,11 +19,11 @@ const Blog = ({ blog, user, handleLikes, handleRemove }) => {
         {blog.likes} likes <button type='button' value={id} onClick={handleLikes}>like</button> <br />
         added by {user.name} <br />
         {
-        currentUser.username === user.username &&
-        <button type='button' value={id} onClick={handleRemove}>remove</button> 
+          currentUser.username === user.username &&
+        <button type='button' value={id} onClick={handleRemove}>remove</button>
         }
       </div>
     </div>
-)}
+  )}
 
 export default Blog
