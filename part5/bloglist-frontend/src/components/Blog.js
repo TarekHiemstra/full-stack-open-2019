@@ -9,11 +9,11 @@ const Blog = ({ blog, user, handleLikes, handleRemove }) => {
   const currentUser = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
 
   return (
-    <div className='blog'>
-      <div style={hideWhenExpanded} onClick={() => setExpanded(!expanded)}>
+    <div className='blog' onClick={() => setExpanded(!expanded)}>
+      <div style={hideWhenExpanded}>
         {blog.title} {blog.author}
       </div>
-      <div style={showWhenExpanded} onClick={() => setExpanded(!expanded)}>
+      <div style={showWhenExpanded}>
         {blog.title} {blog.author} <br />
         <a href={blog.url}>{blog.url}</a> <br />
         {blog.likes} likes <button type='button' value={id} onClick={handleLikes}>like</button> <br />
