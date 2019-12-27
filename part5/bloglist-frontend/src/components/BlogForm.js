@@ -13,15 +13,15 @@ const BlogForm = ({
       <form onSubmit={handleAdding}>
         <div>
             title:
-          <input {...title} />
+          <input {...title.fieldValues()} />
         </div>
         <div>
             author:
-          <input {...author} />
+          <input {...author.fieldValues()} />
         </div>
         <div>
             url:
-          <input {...url} />
+          <input {...url.fieldValues()} />
         </div>
         <button type="submit">create</button>
       </form>

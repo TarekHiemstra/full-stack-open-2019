@@ -11,11 +11,11 @@ const LoginForm = ({
       <form onSubmit={handleLogin}>
         <div>
           username
-          <input {...username} />
+          <input {...username.fieldValues()} />
         </div>
         <div>
           password
-          <input {...password} />
+          <input {...password.fieldValues()} />
         </div>
         <button type="submit">login</button>
       </form>

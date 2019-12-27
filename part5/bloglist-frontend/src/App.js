@@ -50,6 +50,8 @@ const App = () => {
       )
       setUser(user)
       blogService.setToken(user.token)
+      username.reset()
+      password.reset()
     } catch (exception) {
       setMessage('Wrong username or password')
       setTimeout(() => {
@@ -82,6 +84,10 @@ const App = () => {
         }, 5000)
         setBlogs(blogs.concat(data))
       })
+    title.reset()
+    author.reset()
+    url.reset()
+
   }
 
   const handleLikes = (event) => {
