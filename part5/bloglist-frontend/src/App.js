@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import  { useField } from './hooks'
 import Heading from './components/Heading'
 import CurrentUser from './components/CurrentUser'
 import LoginForm from './components/LoginForm'
@@ -9,17 +10,14 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
+  // State hooks
   const [blogs, setBlogs] = useState([])
   const [users, setUsers] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
   const [message, setMessage] = useState(null)
   const blogFormRef = React.createRef()
 
+  // Effect hooks
   useEffect(() => {
     blogService.getAllUsers().then(users => { setUsers(users) })
     blogService.getAll().then(initialBlogs => { setBlogs(initialBlogs) })
@@ -32,19 +30,26 @@ const App = () => {
     }
   }, [])
 
+  // Custom hooks
+  const username = useField('text', 'Username')
+  const password = useField('password', 'Password')
+  const title = useField('text', 'Title')
+  const author = useField('text', 'Author')
+  const url = useField('text', 'Url')
+
+  // Handlers
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password,
+        username: username.value,
+        password: password.value
       })
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
       setUser(user)
       blogService.setToken(user.token)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       setMessage('Wrong username or password')
       setTimeout(() => {
@@ -63,22 +68,19 @@ const App = () => {
     event.preventDefault()
     blogFormRef.current.toggleVisibility()
     const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
+      title: title.value,
+      author: author.value,
+      url: url.value,
     }
 
     blogService
       .create(blogObject)
       .then(data => {
-        setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
+        setMessage(`a new blog ${title.value} by ${author.value} added`)
         setTimeout(() => {
           setMessage(null)
         }, 5000)
         setBlogs(blogs.concat(data))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
       })
   }
 
@@ -119,27 +121,13 @@ const App = () => {
       {user === null ?
         <div>
           <Heading text={'log in to application'} message={message} />
-          <LoginForm
-            handleLogin={handleLogin}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            username={username}
-            password={password}
-          />
+          <LoginForm handleLogin={handleLogin} username={username} password={password} />
         </div> :
         <div>
           <Heading text={'blogs'} message={message} />
           <CurrentUser user={user} handleLogout={handleLogout} />
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm
-              handleAdding={addBlog}
-              handleTitleChange={({ target }) => setNewTitle(target.value)}
-              handleAuthorChange={({ target }) => setNewAuthor(target.value)}
-              handleUrlChange={({ target }) => setNewUrl(target.value)}
-              title={newTitle}
-              author={newAuthor}
-              url={newUrl}
-            />
+            <BlogForm handleAdding={addBlog} title={title} author={author} url={url} />
           </Togglable>
           <Blogs blogs={blogs} users={users} handleLikes={handleLikes} handleRemove={handleRemove} />
         </div>
