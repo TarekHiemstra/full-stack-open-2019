@@ -12,3 +12,4 @@ In this part we return to the frontend, first looking at different possibilities
 ## Exercises
 
 * [bloglist-frontend](./bloglist-frontend)
+* [custom-hooks](./custom-hooks)
