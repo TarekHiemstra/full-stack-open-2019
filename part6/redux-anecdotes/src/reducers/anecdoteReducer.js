@@ -22,18 +22,31 @@ const initialState = anecdotesAtStart.map(asObject)
 const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
-  if (action.type === 'VOTE') {
-     const id = action.data.id
+  // eslint-disable-next-line
+  switch (action.type) {
+    case 'VOTE':
+      const id = action.data.id
       const anecdoteToChange = state.find(n => n.id === id)
       const changedAnecdote = {
         ...anecdoteToChange,
         votes: anecdoteToChange.votes + 1
       }
-      return state.map(anecdote =>
-        anecdote.id !== id ? anecdote : changedAnecdote
-      )
+      return state.map(anecdote => anecdote.id !== id ? anecdote : changedAnecdote)
+    case 'NEW_ANECDOTE':
+      return [...state, action.data]
   }
   return state
+}
+
+export const createAnecdote = (content) => { 
+  return {
+    type: 'NEW_ANECDOTE',
+    data: {
+      content,
+      id: getId(),
+      votes: 0
+    }
+  }
 }
 
 export default reducer
