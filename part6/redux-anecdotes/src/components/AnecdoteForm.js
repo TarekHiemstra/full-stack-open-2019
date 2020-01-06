@@ -11,7 +11,7 @@ const AnecdoteForm = ({ store }) => {
     store.dispatch(
       createAnecdote(content)
     )
-    store.dispatch(showNotification(`you successfully added ${content}`))
+    store.dispatch(showNotification(`you successfully added '${content}'`))
     setTimeout(() => {
       store.dispatch(hideNotification())
     }, 5000)
@@ -21,7 +21,8 @@ const AnecdoteForm = ({ store }) => {
     <div>
       <form onSubmit={addAnecdote}>
         <input name="anecdote" />
-        <button type="submit">add</button>
+        <br />
+        <button type="submit">create</button>
       </form>
     </div>
   )

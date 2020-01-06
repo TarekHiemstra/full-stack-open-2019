@@ -7,11 +7,10 @@ const App = (props) => {
 
   return (
     <div>
-      <h1>redux-anecdotes</h1>
-      {props.store.getState().notification !== null && <Notification store={props.store} />}
-      <h2>create new</h2>
-      <AnecdoteForm store={props.store} />
       <h2>Anecdotes</h2>
+      {props.store.getState().notification !== null &&
+      <Notification store={props.store} />}
+      <AnecdoteForm store={props.store} />
       <AnecdoteList store={props.store} />
     </div>
   )

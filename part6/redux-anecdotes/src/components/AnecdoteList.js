@@ -7,7 +7,6 @@ const AnecdoteList = ({ store }) => {
   const anecdotes = store.getState().anecdotes
 
   const vote = (id) => {
-    console.log('vote', id)
     store.dispatch(
       addVote(id)
     )
