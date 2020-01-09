@@ -13,7 +13,7 @@ const App = (props) => {
       {props.store.getState().notification !== null &&
       <Notification store={props.store} />}
       <AnecdoteForm store={props.store} />
-      <AnecdoteList store={props.store} />
+      <AnecdoteList />
     </div>
   )
 }
