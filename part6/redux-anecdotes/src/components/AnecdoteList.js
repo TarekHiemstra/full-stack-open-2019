@@ -9,13 +9,11 @@ const AnecdoteList = (props) => {
   const filter = props.filter
 
   const vote = (id) => {
-    store.dispatch(
-      addVote(id)
-    )
+    props.addVote(id)
     const anecdote = anecdotes.find(n => n.id === id)
-    store.dispatch(showNotification(`you voted '${anecdote.content}'`))
+    props.showNotification(`you voted '${anecdote.content}'`)
     setTimeout(() => {
-      store.dispatch(hideNotification())
+      props.hideNotification()
     }, 5000)
   }
 
@@ -41,10 +39,15 @@ const AnecdoteList = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        anecdotes: state.anecdotes,
-        filter: state.filter
+      anecdotes: state.anecdotes,
+      filter: state.filter
     }
 }
 
+const mapDispatchToProps = {
+  addVote,
+  showNotification,
+  hideNotification
+}
 
-export default connect(mapStateToProps)(AnecdoteList)
+export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList)

@@ -15,15 +15,11 @@ const reducer = combineReducers({
 const store = createStore(reducer)
 
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root'))
-
 const render = () => {
   ReactDOM.render(
-    <App store={store} />,
+    <Provider store={store}>
+      <App />
+    </Provider>,
     document.getElementById('root')
   )
 }
