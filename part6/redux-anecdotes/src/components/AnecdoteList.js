@@ -5,8 +5,7 @@ import { showNotification, hideNotification } from '../reducers/notificationRedu
 
 const AnecdoteList = (props) => {
 
-  const anecdotes = props.anecdotes
-  const filter = props.filter
+  const anecdotes = props.anecdotesToShow
 
   const vote = (id) => {
     props.addVote(id)
@@ -19,10 +18,7 @@ const AnecdoteList = (props) => {
 
   return (
     <div>
-      {anecdotes
-        .filter(anecdote =>
-          anecdote.content.toLowerCase().includes(filter.toLowerCase()))
-        .sort((a, b) => b.votes - a.votes).map(anecdote =>
+      {props.anecdotesToShow.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -38,10 +34,13 @@ const AnecdoteList = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    return {
-      anecdotes: state.anecdotes,
-      filter: state.filter
-    }
+  return {
+    anecdotesToShow: state.anecdotes
+    .filter(anecdote =>
+      anecdote.content.toLowerCase().includes(state.filter.toLowerCase()))
+    .sort((a, b) => b.votes - a.votes),
+    filter: state.filter
+  }
 }
 
 const mapDispatchToProps = {
