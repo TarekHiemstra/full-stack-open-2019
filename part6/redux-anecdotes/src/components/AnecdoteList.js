@@ -5,7 +5,7 @@ import { showNotification, hideNotification } from '../reducers/notificationRedu
 
 const AnecdoteList = (props) => {
 
-  const anecdotes = props.anecdotesToShow
+  const anecdotes = props.anecdotesToShow 
 
   const vote = (id) => {
     props.addVote(id)

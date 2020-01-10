@@ -17,15 +17,15 @@ const anecdoteReducer = (state = [], action) => {
   }
 }
 
-export const createAnecdote = (content) => { 
+export const createAnecdote = (data) => { 
   return {
     type: 'NEW_ANECDOTE',
-    data: {
-      content,
-      votes: 0
-    }
+    data
   }
 }
+
+const generateId = () =>
+  Number((Math.random() * 1000000).toFixed(0))
 
 export const initializeAnecdotes = (anecdotes) => {
   return {
