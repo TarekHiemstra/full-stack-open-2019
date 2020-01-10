@@ -1,9 +1,9 @@
 const filterReducer = (state = '', action) => {
   switch (action.type) {
-    case 'NEW_FILTER':
-      return action.data.filter
-    default:
-      return state
+  case 'NEW_FILTER':
+    return action.data.filter
+  default:
+    return state
   }
 }
 

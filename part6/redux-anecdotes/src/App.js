@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import Notification from './components/Notification'
 import AnecdoteForm from './components/AnecdoteForm'
@@ -11,7 +11,7 @@ const App = (props) => {
   useEffect(() => {
     anecdoteService
       .getAll().then(anecdotes => props.initializeAnecdotes(anecdotes))
-  }, [])
+  }, []) // eslint-disable-line
 
   return (
     <div>
@@ -26,9 +26,9 @@ const App = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    return {
-      notification: state.notification
-    }
+  return {
+    notification: state.notification
+  }
 }
 
 export default connect(mapStateToProps, { initializeAnecdotes })(App)

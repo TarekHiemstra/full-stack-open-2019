@@ -9,7 +9,7 @@ const Notification = (props) => {
   }
   return (
     <div style={style}>
-  	  {props.notification}
+      {props.notification}
     </div>
   )
 }
